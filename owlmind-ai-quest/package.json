@@ -1,0 +1,11 @@
+{
+  "name": "owlmind-ai-quest",
+  "version": "1.0.0",
+  "description": "OwlMind AI Quest – The gamified AI learning platform.",
+  "scripts": {
+    "dev": "vite"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

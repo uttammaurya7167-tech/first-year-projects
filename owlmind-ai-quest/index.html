@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OwlMind AI Quest – The gamified AI learning platform. Master AI, Prompt Engineering, ChatGPT, Claude, Gemini, and more. Earn XP, unlock badges, and become an AI expert." />
+  <meta name="keywords" content="AI learning, prompt engineering, ChatGPT, Claude, Gemini, gamified learning, AI course" />
+  <meta name="author" content="OwlMind AI Quest" />
+  <meta property="og:title" content="OwlMind AI Quest – Learn AI the Fun Way" />
+  <meta property="og:description" content="Gamified AI learning for students, teachers, and beginners. Duolingo meets AI education." />
+  <meta property="og:type" content="website" />
+  <title>OwlMind AI Quest – Learn AI the Fun Way 🦉</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/design-system.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/pages.css" />
+
+  <style>
+    /* ---- LEARN PAGE SPECIFIC ---- */
+    .learn-track-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-2xl);
+      overflow: hidden;
+      transition: all var(--transition-base);
+      cursor: pointer;
+    }
+    .learn-track-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
+    }
+    .learn-track-header {
+      padding: var(--space-6);
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+    .learn-track-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .learn-track-info { flex: 1; }
+    .learn-track-title {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: var(--font-bold);
+      color: var(--text-primary);
+    }
+    .learn-track-meta {
+      font-size: var(--text-xs);
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .learn-track-body {
+      padding: 0 var(--space-6) var(--space-6);
+    }
+    .learn-track-desc {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-4);
+      line-height: 1.6;
+    }
+    .learn-track-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--border);
+      background: var(--bg-glass);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background Orbs -->
+<div class="bg-orbs" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ==================== NAVBAR ==================== -->
+<nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-inner">
+    <!-- Brand -->
+    <div class="navbar-brand" onclick="OWL.app.navigate('/')" role="link" aria-label="OwlMind AI Quest Home">
+      <div class="navbar-logo" aria-hidden="true">🦉</div>
+      <span class="navbar-brand-text">OwlMind</span>
+    </div>
+
+    <!-- Desktop Nav -->
+    <ul class="navbar-nav" id="nav-links" role="list">
+      <li><a class="nav-link" id="nav-learn" onclick="OWL.app.navigate('/learn')" href="#/learn" aria-label="Learning Paths">📚 Learn</a></li>
+      <li><a class="nav-link" id="nav-mentor" onclick="OWL.app.navigate('/mentor')" href="#/mentor" aria-label="AI Mentor">🤖 AI Mentor</a></li>
+      <li><a class="nav-link" id="nav-projects" onclick="OWL.app.navigate('/projects')" href="#/projects" aria-label="Projects">🛠️ Projects</a></li>
+      <li><a class="nav-link" id="nav-leaderboard" onclick="OWL.app.navigate('/leaderboard')" href="#/leaderboard" aria-label="Leaderboard">🏆 Leaderboard</a></li>
+    </ul>
+
+    <!-- Actions -->
+    <div class="navbar-actions">
+      <!-- Theme Toggle -->
+      <button class="theme-toggle" id="theme-toggle" title="Toggle theme" aria-label="Toggle dark/light theme"></button>
+
+      <!-- Auth Buttons (logged out) -->
+      <div id="nav-auth-out" class="flex gap-3 items-center">
+        <button class="btn btn-ghost btn-sm" onclick="OWL.app.navigate('/login')" id="btn-nav-login">Login</button>
+        <button class="btn btn-primary btn-sm" onclick="OWL.app.navigate('/signup')" id="btn-nav-signup">Start Free</button>
+      </div>
+
+      <!-- User (logged in) -->
+      <div id="nav-auth-in" class="hidden flex gap-3 items-center">
+        <div class="flex items-center gap-2" style="font-size:var(--text-sm);color:var(--text-secondary);">
+          <span style="color:var(--warning);font-weight:700;" id="nav-xp-display">0 XP</span>
+          <span>·</span>
+          <span id="nav-streak-display">🔥 0</span>
+        </div>
+        <div class="user-avatar" id="nav-user-avatar" onclick="OWL.app.navigate('/dashboard')" aria-label="My Dashboard" role="button">🦊</div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobile-nav" role="navigation" aria-label="Mobile navigation">
+  <a class="nav-link" href="#/learn" onclick="closeMobileNav();OWL.app.navigate('/learn')">📚 Learn</a>
+  <a class="nav-link" href="#/mentor" onclick="closeMobileNav();OWL.app.navigate('/mentor')">🤖 AI Mentor</a>
+  <a class="nav-link" href="#/projects" onclick="closeMobileNav();OWL.app.navigate('/projects')">🛠️ Projects</a>
+  <a class="nav-link" href="#/leaderboard" onclick="closeMobileNav();OWL.app.navigate('/leaderboard')">🏆 Leaderboard</a>
+  <a class="nav-link" href="#/dashboard" onclick="closeMobileNav();OWL.app.navigate('/dashboard')" id="mobile-nav-dashboard">🏠 Dashboard</a>
+  <div style="border-top:1px solid var(--border);padding-top:1rem;margin-top:0.5rem;display:flex;flex-direction:column;gap:0.5rem;">
+    <button class="btn btn-secondary btn-block" onclick="closeMobileNav();OWL.app.navigate('/login')" id="mobile-btn-login">Login</button>
+    <button class="btn btn-primary btn-block" onclick="closeMobileNav();OWL.app.navigate('/signup')" id="mobile-btn-signup">Start Free</button>
+  </div>
+</nav>
+
+<!-- ==================== TOAST CONTAINER ==================== -->
+<div class="toast-container" id="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+<!-- ==================== LOADER ==================== -->
+<div class="loader-overlay hidden" id="loader-overlay" role="status" aria-label="Loading">
+  <div class="loader-owl">🦉</div>
+  <div class="loader-text" id="loader-text">Loading...</div>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal-overlay hidden" id="modal-overlay" role="dialog" aria-modal="true" onclick="if(event.target===this)OWL.ui.closeModal()">
+  <div class="modal" id="modal-box">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modal-title">Modal Title</h3>
+      <button class="modal-close" onclick="OWL.ui.closeModal()" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- ==================== MAIN APP CONTENT ==================== -->
+<main id="app-content" role="main">
+
+<!-- ===================================================
+     LANDING PAGE (#/)
+     =================================================== -->
+<div id="page-landing" class="hidden">
+
+  <!-- HERO -->
+  <section class="hero-section" aria-labelledby="hero-heading">
+    <div class="container">
+      <div class="hero-inner">
+        <!-- Left: Copy -->
+        <div class="hero-content">
+          <div class="hero-badge" aria-label="New platform">
+            <span>🚀</span>
+            <span>The Future of AI Education is Here</span>
+          </div>
+          <h1 id="hero-heading" class="hero-title">
+            Learn AI Like a
+            <span class="text-gradient-primary">Superstar</span> 🦉
+          </h1>
+          <p class="hero-description">
+            Master AI tools, prompt engineering, and automation through gamified lessons, real projects, and an AI mentor — all at your own pace.
+          </p>
+          <div class="hero-actions">
+            <button class="btn btn-primary btn-xl" onclick="OWL.app.navigate('/signup')" id="hero-cta-primary">
+              Start Learning Free 🚀
+            </button>
+            <button class="btn btn-outline btn-xl" onclick="OWL.app.navigate('/learn')" id="hero-cta-secondary">
+              Explore Courses
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div>
+              <span class="hero-stat-value text-gradient-primary">30+</span>
+              <span class="hero-stat-label">AI Lessons</span>
+            </div>
+            <div>
+              <span class="hero-stat-value text-gradient-primary">8</span>
+              <span class="hero-stat-label">Learning Tracks</span>
+            </div>
+            <div>
+              <span class="hero-stat-value text-gradient-primary">15</span>
+              <span class="hero-stat-label">Badges to Earn</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Visual -->
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-owl-container">
+            <div class="hero-owl-glow"></div>
+            <div class="hero-owl-emoji">🦉</div>
+            <div class="hero-floating-cards">
+              <div class="hero-float-card hero-float-card-1">⚡ +50 XP</div>
+              <div class="hero-float-card hero-float-card-2">🏆 Prompt Master</div>
+              <div class="hero-float-card hero-float-card-3">🔥 7-day streak!</div>
+              <div class="hero-float-card hero-float-card-4">✅ Level 5</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" aria-labelledby="features-heading">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Why OwlMind?</span>
+        <h2 id="features-heading" class="section-title">Everything You Need to Master AI</h2>
+        <p class="section-desc">A complete AI learning ecosystem that's fun, practical, and actually teaches you skills employers want.</p>
+      </div>
+      <div class="grid grid-3 gap-6 stagger-children">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:linear-gradient(135deg,#4F46E5,#6D64F0)">🎮</div>
+          <h3 class="feature-title">Gamified Learning</h3>
+          <p class="feature-desc">Earn XP, unlock badges, climb leaderboards, and maintain daily streaks. Learning AI has never felt this addictive.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:linear-gradient(135deg,#FF6B35,#FF8F61)">🤖</div>
+          <h3 class="feature-title">AI Mentor</h3>
+          <p class="feature-desc">Get instant answers from your personal AI mentor. Stuck on a concept? Need prompt feedback? Owl's got you covered 24/7.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:linear-gradient(135deg,#06B6D4,#22D3EE)">🛠️</div>
+          <h3 class="feature-title">Real Projects</h3>
+          <p class="feature-desc">Build actual AI projects — chatbots, resume builders, automation workflows — and add them to your portfolio.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:linear-gradient(135deg,#10B981,#34D399)">🎓</div>
+          <h3 class="feature-title">Certificates</h3>
+          <p class="feature-desc">Earn verified certificates for each completed course. Share them on LinkedIn and stand out to employers.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:linear-gradient(135deg,#F59E0B,#FCD34D)">📊</div>
+          <h3 class="feature-title">Teacher Dashboard</h3>
+          <p class="feature-desc">Educators can create classrooms, assign courses, track student progress, and get detailed analytics in one place.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA)">📱</div>
+          <h3 class="feature-title">Mobile-First</h3>
+          <p class="feature-desc">Learn on any device. Our responsive design ensures a premium experience whether you're on phone, tablet, or desktop.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEARNING TRACKS PREVIEW -->
+  <section class="tracks-section" aria-labelledby="tracks-heading">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Learning Paths</span>
+        <h2 id="tracks-heading" class="section-title">8 Expert-Crafted AI Tracks</h2>
+        <p class="section-desc">From AI basics to advanced automation — structured paths that take you from curious beginner to confident AI practitioner.</p>
+      </div>
+      <div class="grid grid-2 gap-4 stagger-children" id="landing-tracks-grid">
+        <!-- Populated by JS -->
+        <div class="track-preview-card" onclick="OWL.app.navigate('/course/ai-foundations')">
+          <div class="track-preview-icon" style="background:linear-gradient(135deg,#4F46E5,#6D64F0)">🧠</div>
+          <div class="track-preview-info">
+            <div class="track-preview-title">AI Foundations</div>
+            <div class="track-preview-meta">4 lessons · Beginner · 200 XP</div>
+          </div>
+          <div class="track-preview-arrow">→</div>
+        </div>
+        <div class="track-preview-card" onclick="OWL.app.navigate('/course/prompt-engineering')" style="border-left-color:var(--primary)">
+          <div class="track-preview-icon" style="background:linear-gradient(135deg,#FF6B35,#FF8F61)">✍️</div>
+          <div class="track-preview-info">
+            <div class="track-preview-title">Prompt Engineering</div>
+            <div class="track-preview-meta">5 lessons · Beginner → Advanced · 250 XP</div>
+          </div>
+          <div class="track-preview-arrow">→</div>
+        </div>
+        <div class="track-preview-card" onclick="OWL.app.navigate('/course/chatgpt-mastery')">
+          <div class="track-preview-icon" style="background:linear-gradient(135deg,#10B981,#34D399)">💬</div>
+          <div class="track-preview-info">
+            <div class="track-preview-title">ChatGPT Mastery</div>
+            <div class="track-preview-meta">4 lessons · Intermediate · 200 XP</div>
+          </div>
+          <div class="track-preview-arrow">→</div>
+        </div>
+        <div class="track-preview-card" onclick="OWL.app.navigate('/course/vibe-coding')">
+          <div class="track-preview-icon" style="background:linear-gradient(135deg,#06B6D4,#22D3EE)">💻</div>
+          <div class="track-preview-info">
+            <div class="track-preview-title">Vibe Coding</div>
+            <div class="track-preview-meta">5 lessons · Beginner → Pro · 250 XP</div>
+          </div>
+          <div class="track-preview-arrow">→</div>
+        </div>
+        <div class="track-preview-card" onclick="OWL.app.navigate('/course/claude-mastery')">
+          <div class="track-preview-icon" style="background:linear-gradient(135deg,#8B5CF6,#A78BFA)">🔮</div>
+          <div class="track-preview-info">
+            <div class="track-preview-title">Claude Mastery</div>
+            <div class="track-preview-meta">3 lessons · Intermediate · 150 XP</div>
+          </div>
+          <div class="track-preview-arrow">→</div>
+        </div>
+        <div class="track-preview-card" onclick="OWL.app.navigate('/course/automation')">
+          <div class="track-preview-icon" style="background:linear-gradient(135deg,#F59E0B,#FCD34D)">⚙️</div>
+          <div class="track-preview-info">
+            <div class="track-preview-title">Automation</div>
+            <div class="track-preview-meta">3 lessons · Intermediate · 150 XP</div>
+          </div>
+          <div class="track-preview-arrow">→</div>
+        </div>
+      </div>
+      <div class="text-center mt-8">
+        <button class="btn btn-secondary btn-lg" onclick="OWL.app.navigate('/learn')">View All 8 Learning Tracks →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD PREVIEW -->
+  <section class="features-section" aria-labelledby="lb-heading">
+    <div class="container">
+      <div class="flex justify-between items-center mb-8" style="flex-wrap:wrap;gap:1rem;">
+        <div>
+          <span class="section-eyebrow">Community</span>
+          <h2 id="lb-heading" class="section-title" style="margin-bottom:0">Global Leaderboard</h2>
+        </div>
+        <button class="btn btn-outline" onclick="OWL.app.navigate('/leaderboard')">View Full Leaderboard →</button>
+      </div>
+      <div class="leaderboard-list" id="landing-leaderboard" style="max-width:600px;margin:0 auto;">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials-section" style="background:var(--bg-surface);padding:5rem 0;" aria-labelledby="testimonials-heading">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Student Success</span>
+        <h2 id="testimonials-heading" class="section-title">Loved by Learners Worldwide</h2>
+      </div>
+      <div class="grid grid-3 gap-6 stagger-children">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonial-text">"OwlMind transformed how I use AI at work. The prompt engineering course alone saved me 10 hours per week. The gamification keeps me coming back every day!"</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">🧑‍💻</div>
+            <div>
+              <div class="testimonial-name">Rahul Mehta</div>
+              <div class="testimonial-role">Software Engineer · Mumbai, India</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonial-text">"I use OwlMind with my whole class. The teacher dashboard is incredible — I can see exactly where each student is struggling and assign targeted lessons."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">👩‍🏫</div>
+            <div>
+              <div class="testimonial-name">Ms. Jennifer Walsh</div>
+              <div class="testimonial-role">High School Teacher · Chicago, USA</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+          <p class="testimonial-text">"The Vibe Coding track helped me build my first AI app in 2 weeks. I had zero coding experience! The projects section and AI mentor made all the difference."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">🧑‍🎓</div>
+            <div>
+              <div class="testimonial-name">Amara Okonkwo</div>
+              <div class="testimonial-role">University Student · Lagos, Nigeria</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing-section" aria-labelledby="pricing-heading">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-eyebrow">Pricing</span>
+        <h2 id="pricing-heading" class="section-title">Simple, Transparent Pricing</h2>
+        <p class="section-desc">Start free. Upgrade when you're ready for more.</p>
+      </div>
+      <div class="grid grid-3 gap-6" style="max-width:900px;margin:0 auto;">
+        <!-- Free -->
+        <div class="pricing-card">
+          <div class="pricing-plan-name">🌱 Free</div>
+          <div class="pricing-amount">$0<span>/mo</span></div>
+          <div class="pricing-period">Forever free · No credit card</div>
+          <ul class="pricing-features">
+            <li><span class="pricing-check">✓</span> 10 lessons per track</li>
+            <li><span class="pricing-check">✓</span> AI Mentor (10 messages/day)</li>
+            <li><span class="pricing-check">✓</span> XP & badges</li>
+            <li><span class="pricing-check">✓</span> 2 project submissions</li>
+            <li><span class="pricing-x">✕</span> Premium certificates</li>
+            <li><span class="pricing-x">✕</span> Advanced courses</li>
+          </ul>
+          <button class="btn btn-outline btn-block" onclick="OWL.app.navigate('/signup')">Get Started Free</button>
+        </div>
+        <!-- Pro -->
+        <div class="pricing-card popular">
+          <div class="pricing-popular-badge">⚡ Most Popular</div>
+          <div class="pricing-plan-name">⚡ Pro</div>
+          <div class="pricing-amount">$9<span>/mo</span></div>
+          <div class="pricing-period">Billed monthly · Cancel anytime</div>
+          <ul class="pricing-features">
+            <li><span class="pricing-check">✓</span> All 30+ lessons</li>
+            <li><span class="pricing-check">✓</span> Unlimited AI Mentor</li>
+            <li><span class="pricing-check">✓</span> All XP, badges & streaks</li>
+            <li><span class="pricing-check">✓</span> Unlimited projects</li>
+            <li><span class="pricing-check">✓</span> Premium certificates</li>
+            <li><span class="pricing-check">✓</span> Project reviews by AI</li>
+          </ul>
+          <button class="btn btn-primary btn-block" onclick="OWL.app.navigate('/signup')">Start Pro Trial</button>
+        </div>
+        <!-- School -->
+        <div class="pricing-card">
+          <div class="pricing-plan-name">🏫 School</div>
+          <div class="pricing-amount">$4<span>/student/mo</span></div>
+          <div class="pricing-period">Min 10 students · Annual billing</div>
+          <ul class="pricing-features">
+            <li><span class="pricing-check">✓</span> Everything in Pro</li>
+            <li><span class="pricing-check">✓</span> Teacher dashboard</li>
+            <li><span class="pricing-check">✓</span> Classroom management</li>
+            <li><span class="pricing-check">✓</span> Progress analytics</li>
+            <li><span class="pricing-check">✓</span> Custom assignments</li>
+            <li><span class="pricing-check">✓</span> Priority support</li>
+          </ul>
+          <button class="btn btn-outline btn-block" onclick="OWL.ui.toast('Contact us at hello@owlmind.ai','info')">Contact Sales</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" aria-labelledby="faq-heading">
+    <div class="container" style="max-width:800px;">
+      <div class="section-header">
+        <h2 id="faq-heading" class="section-title">Frequently Asked Questions</h2>
+      </div>
+      <div id="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+            <span class="faq-question-text">Do I need any prior experience with AI?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">Absolutely not! OwlMind is designed for complete beginners. We start from "What is AI?" and gradually build your skills. Students as young as 13 have completed our courses successfully.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+            <span class="faq-question-text">How does the gamification system work?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">You earn XP (experience points) for completing lessons and quizzes. XP levels you up from AI Curious (Level 1) to AI Legend (Level 50). Daily logins build streaks, and special achievements unlock badges. Your rank is displayed on our global leaderboard!</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+            <span class="faq-question-text">Are the certificates recognized by employers?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">Our certificates demonstrate practical AI skills and can be verified via QR code. They're great for LinkedIn profiles, portfolios, and showing employers you've invested in AI literacy. Each certificate includes a unique verification ID.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+            <span class="faq-question-text">Can I use this for my school or classroom?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">Yes! Our Teacher Dashboard lets educators create classrooms, assign specific courses, monitor individual student progress, and view completion analytics. Contact us for School plan pricing.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+            <span class="faq-question-text">What AI tools does OwlMind cover?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">We cover ChatGPT, Claude, Gemini, Grok, Replit, Lovable, Antigravity, Cursor, Windsurf, Zapier, Make, n8n, and more. Our curriculum is continuously updated as new AI tools emerge.</div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+            <span class="faq-question-text">How does the AI Mentor work?</span>
+            <span class="faq-toggle">+</span>
+          </button>
+          <div class="faq-answer">Owl, your AI mentor, can answer questions about any lesson, improve your prompts, suggest learning paths, review project ideas, and explain complex concepts in simple terms. It's like having a tutor available 24/7.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section style="padding:5rem 0;background:linear-gradient(135deg,var(--secondary-dark),var(--secondary),#6D64F0);" aria-labelledby="cta-heading">
+    <div class="container text-center">
+      <div style="font-size:4rem;margin-bottom:1rem;">🦉</div>
+      <h2 id="cta-heading" style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:800;color:white;margin-bottom:1rem;">Ready to Become an AI Expert?</h2>
+      <p style="color:rgba(255,255,255,0.8);font-size:1.1rem;margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto;">Join thousands of students already mastering AI on OwlMind. Start free today, no credit card required.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-gold btn-xl" onclick="OWL.app.navigate('/signup')">🚀 Start Learning Now — It's Free</button>
+        <button class="btn btn-outline btn-xl" style="border-color:rgba(255,255,255,0.4);color:white;" onclick="OWL.auth.loginAsGuest();OWL.app.navigate('/dashboard')">Try as Guest</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="navbar-logo">🦉</div>
+            <span class="footer-brand-name text-gradient-primary">OwlMind AI Quest</span>
+          </div>
+          <p class="footer-desc">The gamified AI learning platform for students, teachers, and curious minds. Master AI tools and build real skills.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="Twitter" onclick="return false;">🐦</a>
+            <a href="#" aria-label="LinkedIn" onclick="return false;">💼</a>
+            <a href="#" aria-label="YouTube" onclick="return false;">▶️</a>
+            <a href="#" aria-label="Discord" onclick="return false;">💬</a>
+          </div>
+        </div>
+        <div>
+          <div class="footer-col-title">Learning</div>
+          <ul class="footer-links">
+            <li><a href="#/learn" onclick="OWL.app.navigate('/learn');return false;">Learning Paths</a></li>
+            <li><a href="#/course/ai-foundations" onclick="OWL.app.navigate('/course/ai-foundations');return false;">AI Foundations</a></li>
+            <li><a href="#/course/prompt-engineering" onclick="OWL.app.navigate('/course/prompt-engineering');return false;">Prompt Engineering</a></li>
+            <li><a href="#/course/vibe-coding" onclick="OWL.app.navigate('/course/vibe-coding');return false;">Vibe Coding</a></li>
+            <li><a href="#/course/automation" onclick="OWL.app.navigate('/course/automation');return false;">Automation</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Platform</div>
+          <ul class="footer-links">
+            <li><a href="#/mentor" onclick="OWL.app.navigate('/mentor');return false;">AI Mentor</a></li>
+            <li><a href="#/projects" onclick="OWL.app.navigate('/projects');return false;">Projects</a></li>
+            <li><a href="#/leaderboard" onclick="OWL.app.navigate('/leaderboard');return false;">Leaderboard</a></li>
+            <li><a href="#/certificates" onclick="OWL.app.navigate('/certificates');return false;">Certificates</a></li>
+            <li><a href="#/teacher" onclick="OWL.app.navigate('/teacher');return false;">For Teachers</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-col-title">Company</div>
+          <ul class="footer-links">
+            <li><a href="#" onclick="return false;">About</a></li>
+            <li><a href="#" onclick="return false;">Blog</a></li>
+            <li><a href="#" onclick="return false;">Careers</a></li>
+            <li><a href="#" onclick="return false;">Privacy Policy</a></li>
+            <li><a href="#" onclick="return false;">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2025 OwlMind AI Quest. Made with 🦉 for curious minds.</span>
+        <span>Empowering 100,000+ students worldwide</span>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- END LANDING PAGE -->
+
+
+<!-- ===================================================
+     AUTH PAGES
+     =================================================== -->
+
+<!-- LOGIN -->
+<div id="page-login" class="hidden">
+  <div id="login-container"></div>
+</div>
+
+<!-- SIGNUP -->
+<div id="page-signup" class="hidden">
+  <div id="signup-container"></div>
+</div>
+
+
+<!-- ===================================================
+     DASHBOARD
+     =================================================== -->
+<div id="page-dashboard" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container container-lg" id="dashboard-container">
+      <!-- Populated by dashboard.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     LEARN MAP
+     =================================================== -->
+<div id="page-learn" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container">
+      <div class="page-header">
+        <span class="section-eyebrow">Your Journey</span>
+        <h1 class="page-title">Choose Your <span class="text-gradient-primary">AI Track</span></h1>
+        <p class="page-subtitle">8 expert-crafted learning paths from AI basics to advanced automation. Pick a track and start earning XP.</p>
+      </div>
+      <div id="learn-tracks-grid" class="grid gap-6" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr));">
+        <!-- Populated by app.js showLearnMap() -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     COURSE PAGE
+     =================================================== -->
+<div id="page-course" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container" id="course-container">
+      <!-- Populated by app.js showCourse() -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     LESSON PAGE
+     =================================================== -->
+<div id="page-lesson" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container">
+      <div class="lesson-wrapper" id="lesson-container">
+        <!-- Populated by app.js showLesson() -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     QUIZ PAGE
+     =================================================== -->
+<div id="page-quiz" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container">
+      <div class="quiz-wrapper" id="quiz-container">
+        <!-- Populated by quiz.js -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     MENTOR PAGE
+     =================================================== -->
+<div id="page-mentor" class="hidden page-wrapper">
+  <div class="page-inner" style="padding-bottom:0;">
+    <div class="container" id="mentor-container">
+      <!-- Populated by mentor.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     PROJECTS PAGE
+     =================================================== -->
+<div id="page-projects" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container" id="projects-container">
+      <!-- Populated by projects.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     CERTIFICATES PAGE
+     =================================================== -->
+<div id="page-certificates" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container" id="certificates-container">
+      <!-- Populated by certificates.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     LEADERBOARD PAGE
+     =================================================== -->
+<div id="page-leaderboard" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container" id="leaderboard-container">
+      <!-- Populated by app.js showLeaderboard() -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     TEACHER DASHBOARD
+     =================================================== -->
+<div id="page-teacher" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container container-lg" id="teacher-container">
+      <!-- Populated by teacher.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     ADMIN DASHBOARD
+     =================================================== -->
+<div id="page-admin" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container container-lg" id="admin-container">
+      <!-- Populated by admin.js -->
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================
+     PROFILE PAGE
+     =================================================== -->
+<div id="page-profile" class="hidden page-wrapper">
+  <div class="page-inner">
+    <div class="container" id="profile-container">
+      <!-- Populated by app.js showProfile() -->
+    </div>
+  </div>
+</div>
+
+</main>
+<!-- END APP CONTENT -->
+
+
+<!-- ==================== JAVASCRIPT ==================== -->
+
+<!-- Data Layer -->
+<script src="js/data/badges.js"></script>
+<script src="js/data/leaderboard.js"></script>
+<script src="js/data/courses.js"></script>
+<script src="js/data/quizzes.js"></script>
+
+<!-- Core -->
+<script src="js/ui.js"></script>
+<script src="js/gamification.js"></script>
+<script src="js/auth.js"></script>
+
+<!-- Features -->
+<script src="js/dashboard.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/mentor.js"></script>
+<script src="js/certificates.js"></script>
+<script src="js/projects.js"></script>
+<script src="js/teacher.js"></script>
+<script src="js/admin.js"></script>
+
+<!-- App (Router — load last) -->
+<script src="js/app.js"></script>
+
+<script>
+/* ---- INLINE HELPERS (no module needed) ---- */
+
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+  btn.setAttribute('aria-expanded', !isOpen);
+}
+
+function closeMobileNav() {
+  document.getElementById('mobile-nav').classList.remove('open');
+  document.getElementById('mobile-menu-btn').setAttribute('aria-expanded', 'false');
+}
+
+document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+  var nav = document.getElementById('mobile-nav');
+  var isOpen = nav.classList.toggle('open');
+  this.setAttribute('aria-expanded', isOpen);
+  this.textContent = isOpen ? '✕' : '☰';
+});
+
+/* ---- POPULATE LANDING LEADERBOARD ---- */
+function populateLandingLeaderboard() {
+  var container = document.getElementById('landing-leaderboard');
+  if (!container || !window.OWL) return;
+  var board = OWL.gamification.getLeaderboard().slice(0, 5);
+  var currentUser = OWL.auth.getCurrentUser();
+  container.innerHTML = board.map(function(entry, i) {
+    var rankClass = i === 0 ? 'top-1' : i === 1 ? 'top-2' : i === 2 ? 'top-3' : '';
+    var isMe = currentUser && entry.id === currentUser.id;
+    return '<div class="leaderboard-item ' + rankClass + (isMe ? ' me' : '') + '">' +
+      '<div class="leaderboard-rank ' + (i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'') + '">' + (i+1) + '</div>' +
+      '<div class="leaderboard-avatar">' + (entry.avatar || '🦊') + '</div>' +
+      '<div class="leaderboard-info">' +
+        '<div class="leaderboard-name">' + entry.name + (isMe ? ' <span class="badge badge-primary">You</span>':''  ) + '</div>' +
+        '<div class="leaderboard-level">Level ' + (entry.level||1) + ' · ' + (OWL.gamification.getLevelTitle(entry.level||1)) + '</div>' +
+      '</div>' +
+      '<div class="leaderboard-xp">' + (entry.xp||0).toLocaleString() + ' XP</div>' +
+    '</div>';
+  }).join('');
+}
+
+// Run after app initializes
+document.addEventListener('owlmind-ready', populateLandingLeaderboard);
+</script>
+
+</body>
+</html>
