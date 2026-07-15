@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────────────────────────
+#  requirements.txt  –  Face + Hand Analyser  (Python 3.14 safe)
+#
+#  Install with:
+#       pip install --prefer-binary -r requirements.txt
+#
+#  NO TensorFlow needed. Uses OpenCV DNN + ONNX Runtime instead.
+# ─────────────────────────────────────────────────────────────────
+
+# Core computer-vision and webcam capture
+opencv-python>=4.9.0
+
+# Google MediaPipe – hand tracking
+mediapipe>=0.10.14
+
+# ONNX Runtime – runs the emotion model (no TF/PyTorch required)
+onnxruntime>=1.18.0
+
+# NumPy – used by ONNX and OpenCV
+numpy>=1.24.0
