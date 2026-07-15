@@ -1,0 +1,328 @@
+/* ============================================
+   OWLMIND AI QUEST - ANIMATIONS
+   ============================================ */
+
+/* ---- KEYFRAME DEFINITIONS ---- */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes zoomOut {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.8); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-12px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(300%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-16px) rotate(2deg); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.15); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.15); }
+  70% { transform: scale(1); }
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes progressGrow {
+  from { width: 0%; }
+  to { width: var(--progress-width); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes starPop {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes xpFloat {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 10px var(--secondary-glow), 0 0 20px var(--secondary-glow); }
+  50% { box-shadow: 0 0 20px var(--secondary-glow), 0 0 40px var(--secondary-glow), 0 0 60px var(--secondary-glow); }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-40px, 30px) scale(0.95); }
+  66% { transform: translate(30px, -10px) scale(1.05); }
+}
+
+@keyframes orbFloat3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(20px, 30px) scale(1.08); }
+}
+
+@keyframes mapNodePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(79, 70, 229, 0); }
+}
+
+@keyframes badgeUnlock {
+  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  80% { transform: scale(0.95) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes levelUp {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.3); filter: brightness(1.5); }
+  50% { transform: scale(1.1); }
+  75% { transform: scale(1.2); filter: brightness(1.3); }
+  100% { transform: scale(1); }
+}
+
+@keyframes streakFire {
+  0%, 100% { transform: scale(1) rotate(-3deg); }
+  25% { transform: scale(1.1) rotate(3deg); }
+  50% { transform: scale(0.95) rotate(-2deg); }
+  75% { transform: scale(1.05) rotate(2deg); }
+}
+
+/* ---- ANIMATION UTILITY CLASSES ---- */
+
+.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+.animate-slide-up { animation: slideUp 0.4s var(--transition-bounce) forwards; }
+.animate-slide-down { animation: slideDown 0.4s var(--transition-bounce) forwards; }
+.animate-slide-in-right { animation: slideInRight 0.4s var(--transition-bounce) forwards; }
+.animate-slide-in-left { animation: slideInLeft 0.4s var(--transition-bounce) forwards; }
+.animate-zoom-in { animation: zoomIn 0.3s var(--transition-bounce) forwards; }
+.animate-shake { animation: shake 0.4s ease; }
+.animate-pulse { animation: pulse 2s infinite; }
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-heartbeat { animation: heartbeat 1.5s ease infinite; }
+.animate-wiggle { animation: wiggle 0.5s ease infinite; }
+.animate-bounce { animation: bounce 0.6s ease infinite alternate; }
+
+/* Stagger children animations */
+.stagger-children > * {
+  opacity: 0;
+  animation: slideUp 0.4s var(--transition-bounce) forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+/* ---- BACKGROUND ORBS ---- */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.12;
+}
+[data-theme="light"] .orb { opacity: 0.06; }
+.orb-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--secondary);
+  top: -100px;
+  left: -100px;
+  animation: orbFloat1 12s ease-in-out infinite;
+}
+.orb-2 {
+  width: 400px;
+  height: 400px;
+  background: var(--primary);
+  bottom: -80px;
+  right: -80px;
+  animation: orbFloat2 14s ease-in-out infinite;
+}
+.orb-3 {
+  width: 300px;
+  height: 300px;
+  background: var(--accent);
+  top: 40%;
+  right: 20%;
+  animation: orbFloat3 10s ease-in-out infinite;
+}
+
+/* ---- HERO ANIMATIONS ---- */
+.hero-content {
+  animation: slideUp 0.8s var(--transition-bounce) forwards;
+}
+.hero-visual {
+  animation: slideInRight 0.8s var(--transition-bounce) 0.2s both;
+}
+
+/* ---- OWL MASCOT ---- */
+.owl-mascot {
+  animation: float 5s ease-in-out infinite;
+  display: inline-block;
+}
+.owl-mascot-sm {
+  width: 48px;
+  height: 48px;
+}
+.owl-mascot-md {
+  width: 80px;
+  height: 80px;
+}
+.owl-mascot-lg {
+  width: 140px;
+  height: 140px;
+}
+
+/* ---- GLOW EFFECTS ---- */
+.glow-primary { animation: glowPulse 2s infinite; }
+.glow-on-hover:hover {
+  box-shadow: 0 0 20px var(--secondary-glow), 0 0 40px var(--secondary-glow) !important;
+  transition: box-shadow 0.3s ease;
+}
+
+/* ---- HERO GRADIENT ---- */
+.hero-gradient {
+  background: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-surface) 50%, var(--bg-base) 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
+/* ---- LESSON CONTENT ANIMATIONS ---- */
+.lesson-section {
+  opacity: 0;
+  animation: slideUp 0.5s var(--transition-bounce) forwards;
+}
+.lesson-section:nth-child(1) { animation-delay: 0ms; }
+.lesson-section:nth-child(2) { animation-delay: 100ms; }
+.lesson-section:nth-child(3) { animation-delay: 200ms; }
+.lesson-section:nth-child(4) { animation-delay: 300ms; }
+.lesson-section:nth-child(5) { animation-delay: 400ms; }
+
+/* ---- XP FLOATING ---- */
+.xp-popup {
+  position: fixed;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: var(--font-black);
+  color: var(--warning);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  pointer-events: none;
+  z-index: 9999;
+  animation: xpFloat 1.5s ease-out forwards;
+}
+
+/* ---- MAP TRACK ANIMATIONS ---- */
+.track-node {
+  animation: mapNodePulse 2s infinite;
+}
+.track-node.completed {
+  animation: none;
+}
+
+/* ---- RESPONSIVE: REDUCE MOTION ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

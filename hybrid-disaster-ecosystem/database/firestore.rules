@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return request.auth.uid == uid;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+
+    function isCommanderOrResponder() {
+      return isAuthenticated() && (
+        hasRole('commander') || hasRole('responder')
+      );
+    }
+
+    // Users collection
+    match /users/{uid} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid);
+      allow delete: if false; // no deletes
+    }
+
+    // Mesh Payloads — write only for authenticated uplink nodes
+    match /meshPayloads/{payloadId} {
+      allow read: if isCommanderOrResponder();
+      allow create: if isAuthenticated();
+      allow update: if false; // immutable after write
+      allow delete: if false;
+    }
+
+    // Incidents — commanders/responders can read/write
+    match /incidents/{incidentId} {
+      allow read: if isAuthenticated();
+      allow create: if isCommanderOrResponder();
+      allow update: if isCommanderOrResponder();
+      allow delete: if hasRole('commander');
+    }
+
+    // Resources — only commanders manage resources
+    match /resources/{resourceId} {
+      allow read: if isAuthenticated();
+      allow create: if hasRole('commander');
+      allow update: if hasRole('commander');
+      allow delete: if hasRole('commander');
+    }
+  }
+}

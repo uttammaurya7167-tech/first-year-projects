@@ -1,0 +1,77 @@
+{
+  "sample_mesh_payload": {
+    "payloadId": "a1b2c3d4-0001-4000-8000-000000000001",
+    "uplinkNodeId": "node-device-alpha-001",
+    "uplinkUid": "firebase-uid-alpha",
+    "uploadedAt": "2026-06-18T10:00:00Z",
+    "sourceClusterId": "cluster-godhra-zone-3",
+    "encryptionVersion": "aes-gcm-256-v1",
+    "messages": [
+      {
+        "messageId": "msg-0001",
+        "type": "sos",
+        "senderNodeId": "node-civilian-gamma-009",
+        "recipientNodeId": null,
+        "encryptedPayload": "<base64_aes_gcm_ciphertext>",
+        "iv": "<base64_iv>",
+        "hopCount": 3,
+        "ttlOriginal": 7,
+        "ttlRemaining": 4,
+        "createdAt": "2026-06-18T09:45:00Z",
+        "relayedAt": [
+          "2026-06-18T09:46:00Z",
+          "2026-06-18T09:47:30Z",
+          "2026-06-18T09:49:00Z"
+        ]
+      }
+    ],
+    "incidents": [
+      {
+        "incidentId": "inc-0001",
+        "reporterNodeId": "node-civilian-gamma-009",
+        "incidentType": "flood",
+        "description": "Flood water rising rapidly. Family of 5 trapped on rooftop at Shivaji Nagar junction near the water tank. One elderly person (75 yr) with mobility issues. Need urgent boat rescue.",
+        "location": {
+          "lat": 22.3072,
+          "lng": 73.1812,
+          "landmark": "Shivaji Nagar water tank junction"
+        },
+        "mediaHash": null,
+        "casualtyCount": 5,
+        "damageLevel": "critical",
+        "createdAt": "2026-06-18T09:44:00Z"
+      }
+    ],
+    "processedAt": null,
+    "processingStatus": "pending"
+  },
+  "sample_triaged_incident": {
+    "incidentId": "inc-0001",
+    "sourcePayloadId": "a1b2c3d4-0001-4000-8000-000000000001",
+    "incidentType": "flood",
+    "rawDescription": "Flood water rising rapidly. Family of 5 trapped on rooftop at Shivaji Nagar junction near the water tank. One elderly person (75 yr) with mobility issues. Need urgent boat rescue.",
+    "aiTriage": {
+      "severity": "P1_critical",
+      "category": "rescue",
+      "extractedLocation": "Shivaji Nagar water tank junction",
+      "keyEntities": ["family of 5", "elderly person 75yr", "mobility issues", "rooftop", "boat rescue"],
+      "triageNotes": "Immediate water rescue required. Elderly individual with mobility limitation elevates medical risk. Deploy boat unit with paramedic within 30 min.",
+      "triageConfidence": 0.97,
+      "model": "gpt-4o",
+      "triageAt": "2026-06-18T10:00:05Z"
+    },
+    "location": {
+      "lat": 22.3072,
+      "lng": 73.1812,
+      "geohash": "tec5y",
+      "landmark": "Shivaji Nagar water tank junction"
+    },
+    "status": "triaged",
+    "assignedResourceIds": [],
+    "reporterNodeId": "node-civilian-gamma-009",
+    "casualtyCount": 5,
+    "damageLevel": "critical",
+    "createdAt": "2026-06-18T09:44:00Z",
+    "updatedAt": "2026-06-18T10:00:05Z"
+  }
+}

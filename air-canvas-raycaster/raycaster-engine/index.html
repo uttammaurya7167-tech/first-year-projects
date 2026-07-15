@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANTIGRAVITY-DOOM: 2.5D Retro Software Raycaster</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Retro gaming font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Sedgwick+Ave+Display&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Canvas for the retro game rendering -->
+        <canvas id="gameCanvas" width="320" height="240"></canvas>
+
+        <!-- CTR Scanline overlay for that authentic CRT TV look -->
+        <div id="crt-overlay"></div>
+
+        <!-- Start Game Overlay -->
+        <div id="start-overlay" class="overlay">
+            <div class="overlay-content">
+                <h1 class="doom-title">ANTIGRAVITY</h1>
+                <h2 class="sub-title">2.5D SOFTWARE RAYCASTER</h2>
+                <div class="click-prompt">CLICK TO PLAY</div>
+                <div class="instructions">
+                    <p><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> - Move & Strafe</p>
+                    <p><span class="key">Mouse</span> - Look Around (Yaw)</p>
+                    <p><span class="key">Left Click</span> / <span class="key">Space</span> - Fire Shotgun</p>
+                    <p class="pointer-lock-tip">Pointer lock is used for mouse look. Esc to release.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hurt flash screen overlay -->
+        <div id="hurt-overlay"></div>
+
+        <!-- Win/Death screen overlays -->
+        <div id="dead-overlay" class="overlay hidden">
+            <div class="overlay-content">
+                <h1 class="red-title">YOU DIED</h1>
+                <p class="restart-prompt">CLICK TO RESURRECT</p>
+            </div>
+        </div>
+        
+        <div id="win-overlay" class="overlay hidden">
+            <div class="overlay-content">
+                <h1 class="gold-title">VICTORY</h1>
+                <p class="status-msg">THE SECTORS ARE PURGED</p>
+                <p class="restart-prompt">CLICK TO PLAY AGAIN</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Script -->
+    <script src="game.js"></script>
+</body>
+</html>

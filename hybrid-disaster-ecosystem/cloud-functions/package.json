@@ -1,0 +1,14 @@
+{
+  "name": "disaster-relief-cloud-functions",
+  "version": "1.0.0",
+  "description": "Firebase Cloud Functions for RTDRCP — mesh payload ingestion and AI triage",
+  "main": "functions/index.js",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": { "node": "20" },
+  "dependencies": {},
+  "private": true
+}

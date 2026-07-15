@@ -1,0 +1,228 @@
+:root {
+    --bg-color: #0c0c0e;
+    --doom-red: #c21807;
+    --doom-gold: #ffb000;
+    --panel-bg: #1e1e24;
+    --border-color: #3b3b47;
+    --text-color: #e2e2eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Press Start 2P', monospace;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Master Game Viewport Container */
+#game-container {
+    position: relative;
+    width: 960px; /* 320 * 3 scaled up */
+    height: 720px; /* 240 * 3 scaled up */
+    max-width: 95vw;
+    max-height: 95vh;
+    aspect-ratio: 4 / 3;
+    border: 8px solid var(--border-color);
+    box-shadow: 0 0 30px rgba(194, 24, 7, 0.2), inset 0 0 20px rgba(0, 0, 0, 0.8);
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* The actual HTML5 rendering canvas */
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    /* Force crisp pixelated upscaling */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -webkit-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* CRT Scanline and Screen Curve Effect */
+#crt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+    );
+    background-size: 100% 4px; /* Adjust thickness of scanlines */
+    opacity: 0.85;
+}
+
+/* Vignette overlay for dark atmospheric corners */
+#crt-overlay::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.75) 150%);
+    pointer-events: none;
+}
+
+/* Overlay UI Screen Layout */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(6, 6, 8, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    text-align: center;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    display: none;
+}
+
+.overlay-content {
+    max-width: 80%;
+    padding: 20px;
+}
+
+/* Doom Style Gothic Titles */
+.doom-title {
+    font-family: 'Sedgwick Ave Display', cursive;
+    font-size: 76px;
+    color: var(--doom-red);
+    text-shadow: 0 0 10px rgba(194, 24, 7, 0.8), 3px 3px 0px #000;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+    animation: pulse 2s infinite alternate;
+}
+
+.sub-title {
+    font-size: 14px;
+    color: var(--doom-gold);
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.click-prompt {
+    font-size: 20px;
+    color: #fff;
+    margin-bottom: 40px;
+    animation: blink 1.2s infinite steps(2);
+    text-shadow: 1px 1px 4px rgba(255, 255, 255, 0.5);
+}
+
+.instructions {
+    background-color: rgba(30, 30, 36, 0.8);
+    border: 2px solid var(--border-color);
+    padding: 20px;
+    border-radius: 4px;
+    font-size: 10px;
+    line-height: 2;
+    color: #a0a0b0;
+    text-shadow: 1px 1px 0px #000;
+    text-align: left;
+    display: inline-block;
+}
+
+.key {
+    background: #444;
+    border: 1px solid #666;
+    border-bottom: 3px solid #222;
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin: 0 3px;
+    color: #fff;
+    font-family: monospace;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.pointer-lock-tip {
+    margin-top: 15px;
+    font-size: 8px;
+    color: #6a6a7a;
+    text-align: center;
+}
+
+/* Hurt flash screen overlay styling */
+#hurt-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--doom-red);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 15;
+    transition: opacity 0.05s ease-out;
+}
+
+/* Win/Death Overlay Colors */
+.red-title {
+    font-size: 40px;
+    color: var(--doom-red);
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(194, 24, 7, 0.8), 2px 2px 0px #000;
+    animation: blood-drip 3s infinite alternate;
+}
+
+.gold-title {
+    font-size: 40px;
+    color: var(--doom-gold);
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 176, 0, 0.6), 2px 2px 0px #000;
+}
+
+.status-msg {
+    font-size: 12px;
+    color: #a0a0b0;
+    margin-bottom: 30px;
+}
+
+.restart-prompt {
+    font-size: 12px;
+    color: #fff;
+    animation: blink 1.2s infinite steps(2);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.03); filter: brightness(1.2); }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes blood-drip {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(5px); }
+}

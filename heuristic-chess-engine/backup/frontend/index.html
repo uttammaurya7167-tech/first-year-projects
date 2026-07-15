@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antigravity Chess — Play vs AI</title>
+  <meta name="description" content="Play chess against a powerful UCI engine in your browser. Beautiful Chess.com-style interface with real-time engine analysis." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- chessboard.js CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" />
+
+  <!-- Our styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════ HEADER ═══════════════════════ -->
+  <header class="site-header">
+    <div class="header-brand">
+      <span class="brand-icon">♟</span>
+      <span class="brand-name">Antigravity <span class="brand-accent">Chess</span></span>
+    </div>
+
+    <nav class="header-controls">
+      <div class="difficulty-wrap">
+        <label for="difficulty" class="diff-label"><i class="fa-solid fa-brain"></i> Strength</label>
+        <select id="difficulty" class="diff-select">
+          <option value="500">Casual (500ms)</option>
+          <option value="1500" selected>Normal (1.5s)</option>
+          <option value="3000">Strong (3s)</option>
+          <option value="5000">Maximum (5s)</option>
+        </select>
+      </div>
+      <button id="btn-new-white" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> New Game
+      </button>
+      <button id="btn-flip" class="btn btn-ghost">
+        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════ MAIN LAYOUT ═══════════════════════ -->
+  <main class="app-layout">
+
+    <!-- ── LEFT PANEL ─────────────────────────────────────── -->
+    <aside class="side-panel left-panel">
+
+      <!-- New game modal (color chooser) -->
+      <div id="color-chooser" class="color-chooser hidden">
+        <p class="chooser-title">Play as…</p>
+        <div class="color-options">
+          <button id="play-white" class="color-btn white-btn">
+            <span class="piece-icon">♔</span>White
+          </button>
+          <button id="play-black" class="color-btn black-btn">
+            <span class="piece-icon">♚</span>Black
+          </button>
+        </div>
+      </div>
+
+      <!-- Evaluation bar (vertical) -->
+      <div class="eval-bar-wrap" title="Engine evaluation">
+        <div class="eval-bar-track">
+          <div id="eval-bar-fill" class="eval-bar-fill"></div>
+          <div id="eval-bar-label" class="eval-bar-label">0.00</div>
+        </div>
+      </div>
+
+      <!-- Engine info card -->
+      <div class="info-card engine-card">
+        <div class="card-title"><i class="fa-solid fa-microchip"></i> Engine Analysis</div>
+        <div class="engine-rows">
+          <div class="engine-row">
+            <span class="engine-key">Depth</span>
+            <span id="info-depth" class="engine-val mono">—</span>
+          </div>
+          <div class="engine-row">
+            <span class="engine-key">Score</span>
+            <span id="info-score" class="engine-val mono">—</span>
+          </div>
+          <div class="engine-row">
+            <span class="engine-key">Best line</span>
+            <span id="info-pv" class="engine-val mono pv-line">—</span>
+          </div>
+          <div class="engine-row">
+            <span class="engine-key">Status</span>
+            <span id="info-status" class="engine-val status-text">Ready</span>
+          </div>
+        </div>
+        <div id="thinking-bar" class="thinking-bar hidden">
+          <div class="thinking-progress"></div>
+        </div>
+      </div>
+
+      <!-- Controls card -->
+      <div class="info-card controls-card">
+        <div class="card-title"><i class="fa-solid fa-gamepad"></i> Controls</div>
+        <div class="ctrl-btns">
+          <button id="btn-rematch" class="btn btn-outline btn-full">
+            <i class="fa-solid fa-rotate"></i> Rematch
+          </button>
+          <button id="btn-resign" class="btn btn-danger-outline btn-full">
+            <i class="fa-solid fa-flag"></i> Resign
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── BOARD AREA ──────────────────────────────────────── -->
+    <section class="board-area">
+
+      <!-- Opponent (top) player panel -->
+      <div class="player-panel" id="panel-top">
+        <div class="player-avatar" id="avatar-top">
+          <i class="fa-solid fa-robot"></i>
+        </div>
+        <div class="player-info">
+          <span class="player-name" id="name-top">Antigravity Engine</span>
+          <span class="player-rating" id="rating-top">≈1800</span>
+        </div>
+        <div class="captured-pieces" id="captured-top"></div>
+        <div class="player-clock" id="clock-top">
+          <span class="clock-display" id="clock-top-display">0:00</span>
+        </div>
+      </div>
+
+      <!-- The board itself -->
+      <div class="board-wrapper">
+        <div id="board"></div>
+        <!-- Game over overlay -->
+        <div id="game-over-overlay" class="game-over-overlay hidden">
+          <div class="game-over-content">
+            <div class="game-over-icon" id="game-over-icon">♛</div>
+            <div class="game-over-title" id="game-over-title">Checkmate!</div>
+            <div class="game-over-sub" id="game-over-sub">White wins</div>
+            <button id="game-over-rematch" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-rotate"></i> Play Again
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player (bottom) player panel -->
+      <div class="player-panel" id="panel-bottom">
+        <div class="player-avatar human-avatar" id="avatar-bottom">
+          <i class="fa-solid fa-user"></i>
+        </div>
+        <div class="player-info">
+          <span class="player-name" id="name-bottom">You</span>
+          <span class="player-rating" id="rating-bottom">Human</span>
+        </div>
+        <div class="captured-pieces" id="captured-bottom"></div>
+        <div class="player-clock" id="clock-bottom">
+          <span class="clock-display" id="clock-bottom-display">0:00</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── RIGHT PANEL ─────────────────────────────────────── -->
+    <aside class="side-panel right-panel">
+
+      <!-- Move history -->
+      <div class="info-card history-card">
+        <div class="card-title">
+          <i class="fa-solid fa-clock-rotate-left"></i> Move History
+        </div>
+        <div id="move-history" class="move-history">
+          <div class="history-empty">No moves yet…</div>
+        </div>
+      </div>
+
+      <!-- Game log / status messages -->
+      <div class="info-card log-card">
+        <div class="card-title"><i class="fa-solid fa-terminal"></i> Game Log</div>
+        <div id="game-log" class="game-log">
+          <div class="log-entry log-system">Game ready. Start a new game!</div>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ═══════════════════════ STATUS BAR ═══════════════════════ -->
+  <footer class="status-bar">
+    <div id="status-msg" class="status-msg">
+      <i class="fa-solid fa-circle-info"></i> Welcome to Antigravity Chess
+    </div>
+    <div class="status-right">
+      <span class="engine-badge"><i class="fa-solid fa-microchip"></i> UCI Engine Active</span>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
+  <!-- jQuery (required by chessboard.js) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <!-- chess.js — move validation & game logic -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.13.4/chess.min.js"></script>
+
+  <!-- chessboard.js — board rendering -->
+  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+
+  <!-- Our game logic -->
+  <script src="script.js"></script>
+
+</body>
+</html>
